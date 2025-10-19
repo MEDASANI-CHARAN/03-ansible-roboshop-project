@@ -80,14 +80,14 @@
     ansible.builtin.debug:
       msg: "Number of products loaded: {{ catalogue_db_check }}"
 
-- name: Show only stdout (normal output of the command)
-  ansible.builtin.debug:
-    msg: "stdout: {{ catalogue_db_check.stdout }}"
+  - name: Show only stdout (normal output of the command)
+    ansible.builtin.debug:
+      msg: "stdout: {{ catalogue_db_check.stdout }}"
 
-- name: Show stderr (error messages, if any)
-  ansible.builtin.debug:
-    msg: "stderr: {{ catalogue_db_check.stderr }}"
+  - name: Show stderr (error messages, if any)
+    ansible.builtin.debug:
+      msg: "stderr: {{ catalogue_db_check.stderr }}"
 
-- name: Show return code (0 = success, non-zero = failure)
-  ansible.builtin.debug:
-    msg: "Return code (rc): {{ catalogue_db_check.rc }}"
+  - name: Show return code (0 = success, non-zero = failure)
+    ansible.builtin.debug:
+      msg: "Return code (rc): {{ catalogue_db_check.rc }}"
