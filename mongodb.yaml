@@ -35,7 +35,7 @@
 
   - name: Display MongoDB bindIp configuration
     ansible.builtin.debug:
-      msg: "MongoDB bindIp is set to: {{ mongo_bindip_check.stdout }}"
+      msg: "MongoDB bindIp is set to: {{ mongo_bindip_check.stdout_lines }}"
 
   - name: Verify MongoDB listening addresses
     ansible.builtin.shell: "netstat | grep mongod || true"
