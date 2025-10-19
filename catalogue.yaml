@@ -75,7 +75,7 @@
     ansible.builtin.shell: >
       mongosh --host mongodb.daws2025.online --quiet --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
     register: catalogue_db_check
-    when: catalogue_db_check.stdout < 0
+    when: catalogue_db_check.stdout | int < 0
 
   - name: Show products count
     ansible.builtin.debug:
