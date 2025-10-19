@@ -72,7 +72,7 @@
       mongosh --host mongodb.daws2025.online --quiet --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
     register: catalogue_db_check
 
-  - name: Show products count
+  - name: Show/print products count
     ansible.builtin.debug:
       msg: "Number of products loaded: {{ catalogue_db_check }}"
   
