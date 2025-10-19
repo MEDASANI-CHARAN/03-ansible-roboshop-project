@@ -6,11 +6,33 @@
     ansible.builtin.command: dnf module disable nodejs -y
 
   - name: Enable required module nodejs:20
-    become: yes
     ansible.builtin.command: dnf module enable nodejs:20 -y
 
   - name: Install NodeJS
     ansible.builtin.dnf:
       name: nodejs
       state: present
+  
+  - name: create roboshop system user
+    ansible.builtin.user:
+      name: roboshop
+      shell: /sbin/nologin
+      system: true
+      home: /app
+  
+  - name: create app directory
+    ansible.builtin.file:
+      path: /app
+      state: directory
+  
+  - name: Download the application code
+    ansible.builtin.get_url:
+      url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
+      dest: /tmp/catalogue.zip
+  
+  - name: extract the code 
+    ansible.builtin.unarchive:
+      src: /tmp/catalogue.zip
+      dest: /app
+
   
