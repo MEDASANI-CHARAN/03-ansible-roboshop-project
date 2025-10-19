@@ -30,10 +30,18 @@
       url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
       dest: /tmp/catalogue.zip
   
+  # This module thinks file exists on ansible control server, needs to extract on to remote machine(catalogue)
+  # remote_src: yes means file already exits in catalogue server
   - name: extract the code 
     ansible.builtin.unarchive:
       src: /tmp/catalogue.zip
       dest: /app
       remote_src: yes
+
+  - name: install dependencies
+    ansible.builtin.npm:
+      path: /app
+
+  
 
   
