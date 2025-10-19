@@ -43,7 +43,7 @@
 
   - name: Display MongoDB listening status
     ansible.builtin.debug:
-      msg: "{{ mongo_port_check.stdout_lines }}"
+      msg: "{{ mongo_port_check.stdout }}"
 
 
 
