@@ -2,10 +2,10 @@
   hosts: catalogue
   tasks:
   - name: Disable current module nodejs
-    become: yes
     ansible.builtin.command: dnf module disable nodejs -y
 
   - name: Enable required module nodejs:20
+    become: yes
     ansible.builtin.command: dnf module enable nodejs:20 -y
 
   - name: Install NodeJS
