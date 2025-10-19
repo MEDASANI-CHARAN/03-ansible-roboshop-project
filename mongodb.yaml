@@ -6,15 +6,10 @@
     ansible.builtin.copy:
       src: mongodb.repo
       dest: /etc/yum.repos.d/mongo.repo
-    register: command_output
-  
-  - name: print the command output
-    ansible.builtin.debug:
-      msg: "{{ command_output }}"
 
   - name: Install MongoDB server
     ansible.builtin.dnf:
-      name: mongodb-org
+      name: mongodb-org1
       state: present 
 
 
