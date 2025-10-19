@@ -73,7 +73,7 @@
 
   - name: Get index of catalogue DB
     ansible.builtin.shell: >
-      mongosh --host mongodb.daws2025.online --quiet --eval 'db.getMongo().getDBNames()'
+      mongosh --host mongodb.daws2025.online --quiet --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
     register: catalogue_db_check
 
   - name: Show products count
