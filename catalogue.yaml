@@ -57,6 +57,20 @@
       state: started
       enabled: yes
 
+  - name: copying MongoDB repo
+    ansible.builtin.copy:
+      src: mongodb.repo
+      dest: /etc/yum.repos.d/mongo.repo
+
+  - name: install MongoDB client
+    ansible.builtin.dnf:
+      name: mongodb-mongosh
+      state: present
+
+  - name: Run MongoDB script
+    ansible.builtin.shell: 
+      mongosh --host mongodb.daws2025.online < /app/db/master-data.js
+
   
 
   
