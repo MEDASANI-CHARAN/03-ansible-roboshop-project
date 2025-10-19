@@ -42,6 +42,11 @@
     ansible.builtin.npm:
       path: /app
 
+  - name: copy catalogue service to sysem directory
+    ansible.builtin.copy:
+      src: catalogue.service
+      dest: /etc/systemd/system/catalogue.service
+
   
 
   
