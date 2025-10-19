@@ -29,5 +29,21 @@
       name: mongod
       state: restarted
 
+  - name: Verify MongoDB bindIp configuration
+    ansible.builtin.shell: "grep '^ *bindIp' /etc/mongod.conf"
+    register: mongo_bindip_check
+
+  - name: Display MongoDB bindIp configuration
+    ansible.builtin.debug:
+      msg: "MongoDB bindIp is set to: {{ mongo_bindip_check.stdout }}"
+
+  - name: Verify MongoDB listening addresses
+    ansible.builtin.shell: "netstat | grep mongod || true"
+    register: mongo_port_check
+
+  - name: Display MongoDB listening status
+    ansible.builtin.debug:
+      msg: "{{ mongo_port_check.stdout_lines }}"
+
 
 
