@@ -39,7 +39,7 @@
       remote_src: yes
 
   - name: install dependencies
-    ansible.builtin.npm:
+    community.general.npm:
       path: /app
 
   - name: copy catalogue service to sysem directory
@@ -67,9 +67,8 @@
       name: mongodb-mongosh
       state: present
 
-  - name: Run MongoDB script
-    ansible.builtin.shell: 
-      mongosh --host mongodb.daws2025.online < /app/db/master-data.js
+  - name: Load products data
+    ansible.builtin.shell: "mongosh --host mongodb.daws2025.online < /app/db/master-data.js"
 
   
 
