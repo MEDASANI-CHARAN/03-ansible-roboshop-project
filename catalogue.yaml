@@ -68,15 +68,18 @@
       state: present
 
   - name: Load products data
-    ansible.builtin.shell: "mongosh --host mongodb.daws2025.online < /app/db/master-data.js"
+    ansible.builtin.shell: >
+      mongosh --host mongodb.daws2025.online < /app/db/master-data.js
 
-  - name: Check if products are loaded
-    ansible.builtin.shell: "mongosh --quiet --host mongodb.daws2025.online --eval 'db.products.find({}).count()'"
-    register: check_products
+  - name: Get index of catalogue DB
+    ansible.builtin.shell: >
+      mongosh --host mongodb.daws2025.online --quiet --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
+    register: catalogue_db_check
+
   
   - name: Show products count
     ansible.builtin.debug:
-      msg: "Number of products loaded: {{ check_products.stdout }}"
+      msg: "Number of products loaded: {{ catalogue_db_check.stdout }}"
 
 
 
