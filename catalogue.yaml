@@ -70,6 +70,16 @@
   - name: Load products data
     ansible.builtin.shell: "mongosh --host mongodb.daws2025.online < /app/db/master-data.js"
 
+  - name: Check if products are loaded
+    ansible.builtin.shell: "mongosh --quiet --host mongodb.daws2025.online --eval 'db.products.find({}).count()'"
+    register: check_products
+  
+  - name: Show products count
+    ansible.builtin.debug:
+      msg: "Number of products loaded: {{ check_products.stdout }}"
+
+
+
   
 
   
