@@ -30,7 +30,7 @@
   - name: Debug root password check
     ansible.builtin.debug:
       msg: >
-        Root password is already set? {{ root_password_check.rc != 0 }}
+        Root password is already set? {{ root_password_check}}
 
   # - name: Set MySQL root password (idempotent)
   #   community.mysql.mysql_user:
