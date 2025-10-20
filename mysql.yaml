@@ -1,34 +1,35 @@
-- name: configure MySQL component
+- name: Configure MySQL component
   hosts: mysql
   become: yes
   tasks:
-  - name: install MySQL server
+  - name: Install MySQL server
     ansible.builtin.dnf:
       name: mysql-server
-      state: installed
-  
-  - name: Start & Enable MySQL Service
+      state: present
+
+  - name: Start & enable MySQL service
     ansible.builtin.service:
       name: mysqld
       state: started
       enabled: yes
-  
-  - name: Check if MySQL shipping user password is already set
-    ansible.builtin.shell: |
-      mysql -uroot-pRoboShop@1 -e "SELECT User FROM mysql.user WHERE User='shipping';"
-    register: mysql_shipping_pass_check
-    ignore_errors: yes
-    changed_when: false
 
-  - name: Debug output for MySQL shipping user password check
+  - name: Check if shipping user exists
+    community.mysql.mysql_user_info:
+      login_user: root
+      login_password: 'RoboShop@1'
+    register: shipping_user_info
+
+  - name: Debug output for shipping user check
     ansible.builtin.debug:
-      msg: >
-        MySQL shipping user password check result: total output={{ mysql_shipping_pass_check }},
-        rc={{ mysql_shipping_pass_check.rc }},
-        stdout='{{ mysql_shipping_pass_check.stdout }}',
-        stderr='{{ mysql_shipping_pass_check.stderr }}'
+      msg: "{{ shipping_user_info.users | selectattr('user','equalto','shipping') | list }}"
 
-  # - name: Set MySQL shipping user password (only if check fails)
-  #   ansible.builtin.shell: >
-  #     mysql_secure_installation --set-root-pass RoboShop@1
-  #   when: mysql_shipping_pass_check.rc != 0
+  - name: Create shipping user if not exists
+    community.mysql.mysql_user:
+      login_user: root
+      login_password: 'RoboShop@1'
+      name: shipping
+      password: 'Shipping@1'
+      host: localhost
+      state: present
+      priv: "*.*:ALL"
+    when: shipping_user_info.users | selectattr('user','equalto','shipping') | list | length == 0
