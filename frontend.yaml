@@ -43,12 +43,15 @@
   - name: remove default nginx conf
     ansible.builtin.file:
       path: /etc/nginx/nginx.conf
-      state: directory
+      state: absent
   
   - name: copy roboshop ngnx conf
     ansible.builtin.copy:
       src: nginx.conf
       dest: /etc/nginx/nginx.conf
   
-
+  - name: restart frontend Service
+    ansible.builtin.service:
+      name: nginx
+      state: restarted
   
