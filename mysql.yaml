@@ -15,7 +15,7 @@
   
   - name: Check if MySQL shipping user password is already set
     ansible.builtin.shell: |
-      mysql -ushipping -pRoboShop@1 -e "SELECT User FROM mysql.user WHERE User='shipping';"
+      mysql -uroot-pRoboShop@1 -e "SELECT User FROM mysql.user WHERE User='shipping';"
     register: mysql_shipping_pass_check
     ignore_errors: yes
     changed_when: false
@@ -23,8 +23,7 @@
   - name: Debug output for MySQL shipping user password check
     ansible.builtin.debug:
       msg: >
-        MySQL shipping user password check result:
-        total output={{ mysql_shipping_pass_check }},
+        MySQL shipping user password check result: total output={{ mysql_shipping_pass_check }},
         rc={{ mysql_shipping_pass_check.rc }},
         stdout='{{ mysql_shipping_pass_check.stdout }}',
         stderr='{{ mysql_shipping_pass_check.stderr }}'
