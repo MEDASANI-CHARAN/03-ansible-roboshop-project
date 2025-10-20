@@ -20,20 +20,28 @@
         - cryptography
       executable: pip3
 
-  - name: Check if shipping user exists (without changing anything)
+  - name: Set root password (idempotent)
     community.mysql.mysql_user:
       login_user: root
       login_password: ''
+      name: root
+      host_all: yes
+      password: 'RoboShop@1'
+      state: present
+
+  - name: Check if shipping user exists (debug only)
+    community.mysql.mysql_user:
+      login_user: root
+      login_password: 'RoboShop@1'
       name: shipping
       host: localhost
       state: present
     check_mode: yes
     register: shipping_user_check
 
-  - name: Debug output for shipping user check
+  - name: Debug shipping user existence
     ansible.builtin.debug:
-      msg: >
-        Shipping user exists? {{ shipping_user_check.changed == false }}
+      msg: "Shipping user exists? {{ shipping_user_check.changed == false }}"
 
   - name: Create shipping user if not exists
     community.mysql.mysql_user:
