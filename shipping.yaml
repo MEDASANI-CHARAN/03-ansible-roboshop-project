@@ -32,7 +32,7 @@
       dest: /app
       remote_src: yes
 
-  - name: install mavn dependencies
+  - name: install maven dependencies
     ansible.builtin.command: mvn clean package
     args:
       chdir: /app
@@ -57,9 +57,9 @@
       state: started
       enabled: yes
   
-  - name: install MongoDB client
+  - name: install MySQL client
     ansible.builtin.dnf:
-      name: mongodb-mongosh
+      name: mysql-server
       state: present
 
   - name: Check if catalogue database exists
