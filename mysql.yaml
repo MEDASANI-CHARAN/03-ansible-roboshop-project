@@ -20,14 +20,16 @@
         - cryptography
       executable: pip3
 
-  - name: Set root password (idempotent)
-    community.mysql.mysql_user:
-      login_user: root
-      login_password: ''
-      name: root
-      host_all: yes
-      password: 'RoboShop@1'
-      state: present
+  - name: Set root authentication to mysql_native_password and password
+    ansible.builtin.shell: |
+      mysql -u root <<EOF
+      ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'RoboShop@1';
+      FLUSH PRIVILEGES;
+      EOF
+    args:
+      executable: /bin/bash
+    register: set_root
+    changed_when: "'IDENTIFIED WITH mysql_native_password' in set_root.stdout or set_root.rc == 0"
 
   - name: Check if shipping user exists (debug only)
     community.mysql.mysql_user:
