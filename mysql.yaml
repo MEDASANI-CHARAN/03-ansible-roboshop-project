@@ -14,7 +14,7 @@
       enabled: yes
 
   - name: Check if shipping user exists
-    community.mysql.mysql_user_info:
+    community.mysql.mysql_user:
       login_user: root
       login_password: 'RoboShop@1'
     register: shipping_user_info
