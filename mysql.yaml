@@ -28,7 +28,7 @@
         stdout='{{ mysql_shipping_pass_check.stdout }}',
         stderr='{{ mysql_shipping_pass_check.stderr }}'
 
-  - name: Set MySQL shipping user password (only if check fails)
-    ansible.builtin.shell: >
-      mysql_secure_installation --set-root-pass RoboShop@1
-    when: mysql_shipping_pass_check.rc != 0
+  # - name: Set MySQL shipping user password (only if check fails)
+  #   ansible.builtin.shell: >
+  #     mysql_secure_installation --set-root-pass RoboShop@1
+  #   when: mysql_shipping_pass_check.rc != 0
