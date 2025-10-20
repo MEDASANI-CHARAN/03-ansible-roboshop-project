@@ -14,19 +14,29 @@
       enabled: yes
 
   - name: Check if MySQL root password is already set
-    ansible.builtin.shell: >
-      mysql -uroot -pRoboShop@1 -e "SELECT 1;" 2>/dev/null || echo "password_not_set"
+    ansible.builtin.shell: |
+      mysql -uroot -pRoboShop@1 -e "SELECT 1;" >/dev/null 2>&1 && echo "password_set" || echo "password_not_set"
     register: mysql_password_check
     changed_when: false
 
-  - name: Debug MySQL password check result
+  - name: Show MySQL password check result
     ansible.builtin.debug:
       msg: "MySQL root password check result: {{ mysql_password_check.stdout }}"
 
   - name: Set MySQL root password if not set
-    ansible.builtin.command: >
-      mysql_secure_installation --set-root-pass RoboShop@1
+    ansible.builtin.shell: |
+      mysql --connect-expired-password -uroot -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'RoboShop@1';"
     when: "'password_not_set' in mysql_password_check.stdout"
+
+  - name: Verify root password after setup
+    ansible.builtin.shell: |
+      mysql -uroot -pRoboShop@1 -e "SELECT 'Password verified OK';"
+    register: verify_password
+    changed_when: false
+
+  - name: Show verification result
+    ansible.builtin.debug:
+      msg: "{{ verify_password.stdout }}"
   
   # - name: setup root password
   #   ansible.builtin.command: >
