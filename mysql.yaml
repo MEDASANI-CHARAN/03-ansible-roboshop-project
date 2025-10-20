@@ -23,7 +23,7 @@
   - name: Check if shipping user exists (without changing anything)
     community.mysql.mysql_user:
       login_user: root
-      login_password: 'RoboShop@1'
+      login_password: ''
       name: shipping
       host: localhost
       state: present
