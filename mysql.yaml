@@ -13,9 +13,11 @@
       state: started
       enabled: yes
 
-  - name: Install PyMySQL library for MySQL modules
+  - name: Install Python MySQL dependencies
     ansible.builtin.pip:
-      name: PyMySQL
+      name:
+        - PyMySQL
+        - cryptography
       executable: pip3
 
   - name: Check if shipping user exists (without changing anything)
