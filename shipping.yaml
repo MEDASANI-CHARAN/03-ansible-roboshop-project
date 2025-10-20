@@ -36,3 +36,46 @@
     ansible.builtin.command: mvn clean package
     args:
       chdir: /app
+  
+  - name: rename jar file
+    ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar 
+    args:
+      chdir: /app
+
+  - name: copy shipping service to sysem directory
+    ansible.builtin.copy:
+      src: shipping.service
+      dest: /etc/systemd/system/shipping.service
+  
+  - name: systemctl daemon reload
+    ansible.builtin.systemd_service:
+      daemon_reload: true
+  
+  - name: Start & Enable shipping Service
+    ansible.builtin.service:
+      name: shipping
+      state: started
+      enabled: yes
+  
+  - name: install MongoDB client
+    ansible.builtin.dnf:
+      name: mongodb-mongosh
+      state: present
+
+  - name: Check if catalogue database exists
+    ansible.builtin.shell: |
+      mysql -h mysql.daws2025.online -uroot -pRoboShop@1 -e "SHOW DATABASES LIKE 'catalogue';" 
+    register: mysql_db_check
+    ignore_errors: yes
+    changed_when: false
+
+  - name: Show database check result
+    ansible.builtin.debug:
+      msg: "Database check result: {{ mysql_db_check.rc }} (0 means DB exists, non-zero means not exists)"
+
+  - name: Load schema, app-user, and master-data SQL scripts if DB not exists
+    ansible.builtin.shell: |
+      mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < /app/db/schema.sql
+      mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < /app/db/app-user.sql
+      mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < /app/db/master-data.sql
+    when: mysql_db_check.rc != 0
