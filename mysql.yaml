@@ -22,7 +22,7 @@
   
   - name: Show MySQL root password check
     ansible.builtin.debug:
-      msg: "MySQL root password check RC={{ mysql_root_pass_check.rc }}"
+      msg: "MySQL root password check RC={{ mysql_root_pass_check }}"
 
   - name: Setup root password (only if not set)
     ansible.builtin.shell: >
