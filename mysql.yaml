@@ -3,55 +3,55 @@
   become: yes
   tasks:
   - name: Install MySQL server
-    ansible.builtin.dnf:
-      name: mysql-server
-      state: present
+  ansible.builtin.dnf:
+    name: mysql-server
+    state: present
 
-  - name: Start & enable MySQL service
-    ansible.builtin.service:
-      name: mysqld
-      state: started
-      enabled: yes
+- name: Start & enable MySQL service
+  ansible.builtin.service:
+    name: mysqld
+    state: started
+    enabled: yes
 
-  - name: Install Python MySQL dependencies
-    ansible.builtin.pip:
-      name:
-        - PyMySQL
-        - cryptography
-      executable: pip3
+- name: Install Python MySQL dependencies
+  ansible.builtin.pip:
+    name:
+      - PyMySQL
+      - cryptography
+    executable: pip3
 
-  - name: Set root authentication to mysql_native_password and password
-    ansible.builtin.shell: |
-      mysql -u root <<EOF
-      ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'RoboShop@1';
-      FLUSH PRIVILEGES;
-      EOF
-    args:
-      executable: /bin/bash
-    register: set_root
-    changed_when: "'IDENTIFIED WITH mysql_native_password' in set_root.stdout or set_root.rc == 0"
+- name: Set root password using socket authentication (idempotent)
+  ansible.builtin.shell: |
+    sudo mysql <<EOF
+    ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'RoboShop@1';
+    FLUSH PRIVILEGES;
+    EOF
+  args:
+    executable: /bin/bash
+  register: set_root
+  changed_when: set_root.rc == 0
 
-  - name: Check if shipping user exists (debug only)
-    community.mysql.mysql_user:
-      login_user: root
-      login_password: 'RoboShop@1'
-      name: shipping
-      host: localhost
-      state: present
-    check_mode: yes
-    register: shipping_user_check
+- name: Check if shipping user exists (debug only)
+  community.mysql.mysql_user:
+    login_user: root
+    login_password: 'RoboShop@1'
+    name: shipping
+    host: localhost
+    state: present
+  check_mode: yes
+  register: shipping_user_check
 
-  - name: Debug shipping user existence
-    ansible.builtin.debug:
-      msg: "Shipping user exists? {{ shipping_user_check.changed == false }}"
+- name: Debug shipping user existence
+  ansible.builtin.debug:
+    msg: "Shipping user exists? {{ shipping_user_check.changed == false }}"
 
-  - name: Create shipping user if not exists
-    community.mysql.mysql_user:
-      login_user: root
-      login_password: 'RoboShop@1'
-      name: shipping
-      password: 'Shipping@1'
-      host: localhost
-      state: present
-      priv: "*.*:ALL"
-    when: shipping_user_check.changed
+- name: Create shipping user if not exists
+  community.mysql.mysql_user:
+    login_user: root
+    login_password: 'RoboShop@1'
+    name: shipping
+    password: 'Shipping@1'
+    host: localhost
+    state: present
+    priv: "*.*:ALL"
+  when: shipping_user_check.changed
