@@ -12,19 +12,24 @@
       name: mysqld
       state: started
       enabled: yes
-
-  - name: Check if MySQL root password is already set
+  
+  - name: Check if MySQL shipping user password is already set
     ansible.builtin.shell: |
-      mysql -uroot -pRoboShop@1 -e "SELECT User FROM mysql.user WHERE User='root';"
-    register: mysql_root_pass_check
+      mysql -ushipping -pRoboShop@1 -e "SELECT User FROM mysql.user WHERE User='shipping';"
+    register: mysql_shipping_pass_check
     ignore_errors: yes
     changed_when: false
-  
-  - name: Show MySQL root password check
-    ansible.builtin.debug:
-      msg: "MySQL root password check RC={{ mysql_root_pass_check }}"
 
-  - name: Setup root password (only if not set)
+  - name: Debug output for MySQL shipping user password check
+    ansible.builtin.debug:
+      msg: >
+        MySQL shipping user password check result:
+        total output={{ mysql_shipping_pass_check }},
+        rc={{ mysql_shipping_pass_check.rc }},
+        stdout='{{ mysql_shipping_pass_check.stdout }}',
+        stderr='{{ mysql_shipping_pass_check.stderr }}'
+
+  - name: Set MySQL shipping user password (only if check fails)
     ansible.builtin.shell: >
       mysql_secure_installation --set-root-pass RoboShop@1
-    when: mysql_root_pass_check.rc != 0
+    when: mysql_shipping_pass_check.rc != 0
