@@ -13,17 +13,23 @@
       state: started
       enabled: yes
 
-  - name: Check if shipping user exists
+  - name: Check if shipping user exists (debug purpose)
     community.mysql.mysql_user:
       login_user: root
       login_password: 'RoboShop@1'
-    register: shipping_user_info
+      name: shipping
+      host: localhost
+      state: present
+      priv: "*.*:ALL"
+    check_mode: yes
+    register: shipping_user_check
 
   - name: Debug output for shipping user check
     ansible.builtin.debug:
-      msg: "{{ shipping_user_info.users | selectattr('user','equalto','shipping') | list }}"
+      msg: >
+        Shipping user already exists? {{ shipping_user_check.changed == false }}
 
-  # - name: Create shipping user if not exists
+  # - name: Set MySQL shipping user password (only if not set)
   #   community.mysql.mysql_user:
   #     login_user: root
   #     login_password: 'RoboShop@1'
@@ -32,4 +38,4 @@
   #     host: localhost
   #     state: present
   #     priv: "*.*:ALL"
-  #   when: shipping_user_info.users | selectattr('user','equalto','shipping') | list | length == 0
+  #   when: shipping_user_check.changed
