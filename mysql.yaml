@@ -20,37 +20,24 @@
         - cryptography
       executable: pip3
 
-  - name: Set MySQL root password (idempotent)
-    community.mysql.mysql_user:
-      login_user: root
-      login_password: ''
-      user: root
-      host_all: yes
-      password: 'RoboShop@1'
-      state: present
-    ignore_errors: yes  # first run may fail if password already set
+  - name: Check if root password is already set
+    ansible.builtin.shell: |
+      mysql -u root -e "SELECT 1;" >/dev/null 2>&1
+    register: root_password_check
+    ignore_errors: yes
+    changed_when: false
 
-  - name: Check if shipping user exists
-    community.mysql.mysql_user:
-      login_user: root
-      login_password: 'RoboShop@1'
-      name: shipping
-      host: localhost
-      state: present
-    check_mode: yes
-    register: shipping_user_check
-
-  - name: Debug shipping user existence
+  - name: Debug root password check
     ansible.builtin.debug:
-      msg: "Shipping user exists? {{ shipping_user_check.changed == false }}"
+      msg: >
+        Root password is already set? {{ root_password_check.rc != 0 }}
 
-  - name: Create shipping user if not exists
-    community.mysql.mysql_user:
-      login_user: root
-      login_password: 'RoboShop@1'
-      name: shipping
-      password: 'Shipping@1'
-      host: localhost
-      state: present
-      priv: "*.*:ALL"
-    when: shipping_user_check.changed
+  # - name: Set MySQL root password (idempotent)
+  #   community.mysql.mysql_user:
+  #     login_user: root
+  #     login_password: ''
+  #     user: root
+  #     host_all: yes
+  #     password: 'RoboShop@1'
+  #     state: present
+  #   when: root_password_check.rc == 0
