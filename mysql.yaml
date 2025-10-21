@@ -20,7 +20,7 @@
 
     - name: Check if MySQL root password works
       ansible.builtin.shell: |
-        mysql -h mysql.daws2025.online -u root -p'RoboShop@1'
+        mysql -h mysql.daws2025.online -u root -p'RoboShop@1' -e "SELECT 1;" >/dev/null 2>&1
       register: root_pass_check
       ignore_errors: yes
       changed_when: false
@@ -29,11 +29,11 @@
       ansible.builtin.debug:
         msg: "MySQL root password already set? RC={{ root_pass_check.rc }}"
 
-    - name: Setup MySQL root password if not set
-      ansible.builtin.shell: |
-        mysql_secure_installation --set-root-pass RoboShop@1
-      when: root_pass_check.rc != 0
-      changed_when: true
+    # - name: Setup MySQL root password if not set
+    #   ansible.builtin.shell: |
+    #     mysql_secure_installation --set-root-pass RoboShop@1
+    #   when: root_pass_check.rc != 0
+    #   changed_when: true
     
     # - name: Set MySQL root password if not set
     #   community.mysql.mysql_user:
