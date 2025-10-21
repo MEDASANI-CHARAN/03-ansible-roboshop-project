@@ -1,6 +1,7 @@
 - name: Configure MySQL Component
   hosts: mysql
   become: yes
+
   tasks:
 
     - name: Install MySQL server
@@ -16,23 +17,58 @@
 
     - name: Check if MySQL root password works
       ansible.builtin.shell: |
-        mysql -u root -p'RoboShop@1' -e "SELECT 1;" >/dev/null 2>&1
+        mysqladmin ping -u root -p'RoboShop@1' >/dev/null 2>&1
       register: root_pass_check
       ignore_errors: yes
       changed_when: false
 
     - name: Debug root password check
       ansible.builtin.debug:
-        msg: "MySQL root password check RC = {{ root_pass_check.rc }}"
+        msg: "MySQL root password already set? RC={{ root_pass_check.rc }}"
 
     - name: Setup MySQL root password if not set
       ansible.builtin.shell: |
-        mysql -u root <<EOF
-        ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'RoboShop@1';
-        ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'RoboShop@1';
-        FLUSH PRIVILEGES;
-        EOF
+        mysql_secure_installation --set-root-pass RoboShop@1
       when: root_pass_check.rc != 0
+      changed_when: true
+
+
+
+# - name: Configure MySQL Component
+#   hosts: mysql
+#   become: yes
+#   tasks:
+
+#     - name: Install MySQL server
+#       ansible.builtin.dnf:
+#         name: mysql-server
+#         state: installed
+
+#     - name: Start and enable MySQL service
+#       ansible.builtin.service:
+#         name: mysqld
+#         state: started
+#         enabled: yes
+
+#     - name: Check if MySQL root password works
+#       ansible.builtin.shell: |
+#         mysql -u root -p'RoboShop@1' -e "SELECT 1;" >/dev/null 2>&1
+#       register: root_pass_check
+#       ignore_errors: yes
+#       changed_when: false
+
+#     - name: Debug root password check
+#       ansible.builtin.debug:
+#         msg: "MySQL root password check RC = {{ root_pass_check.rc }}"
+
+#     - name: Setup MySQL root password if not set
+#       ansible.builtin.shell: |
+#         mysql -u root <<EOF
+#         ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'RoboShop@1';
+#         ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'RoboShop@1';
+#         FLUSH PRIVILEGES;
+#         EOF
+#       when: root_pass_check.rc != 0
 
 
     # - name: Set MySQL root password if not set
