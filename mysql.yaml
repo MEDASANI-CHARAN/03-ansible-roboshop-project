@@ -29,13 +29,13 @@
     #     mysql_secure_installation --set-root-pass RoboShop@1
     #   when: root_password_check.rc != 0
 
-    # - name: Ensure root@localhost exists
-    #   ansible.builtin.shell: |
-    #     mysql -u root -p'RoboShop@1' -e "
-    #     CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY 'RoboShop@1';
-    #     GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
-    #     FLUSH PRIVILEGES;"
-    #   # always run after secure_installation
+    - name: Ensure root@localhost exists
+      ansible.builtin.shell: |
+        mysql -u root -p'RoboShop@1' -e "
+        CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY 'RoboShop@1';
+        GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
+        FLUSH PRIVILEGES;"
+      # always run after secure_installation
 
 
     
