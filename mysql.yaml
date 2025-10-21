@@ -14,28 +14,28 @@
         state: started
         enabled: yes
     
-    - name: Install Python MySQL dependencies
-      ansible.builtin.pip:
-        name: PyMySQL
-        executable: pip3
+    # - name: Install Python MySQL dependencies # allows Ansible to interact with MySQL using the community.mysql collection modules.
+    #   ansible.builtin.pip:
+    #     name: PyMySQL
+    #     executable: pip3
 
-    - name: Check if MySQL root password is set
-      ansible.builtin.shell: |
-        mysql -u root -p'RoboShop@1' -e "SELECT 1;" >/dev/null 2>&1
-      register: root_password_check
-      ignore_errors: yes
-      changed_when: false
+    # - name: Check if MySQL root password is set
+    #   ansible.builtin.shell: |
+    #     mysql -u root -p'RoboShop@1' -e "SELECT 1;" >/dev/null 2>&1
+    #   register: root_password_check
+    #   ignore_errors: yes
+    #   changed_when: false
 
-    - name: Debug root password check
-      ansible.builtin.debug:
-        msg: "Root password check RC = {{ root_password_check.rc }}"
+    # - name: Debug root password check
+    #   ansible.builtin.debug:
+    #     msg: "Root password check RC = {{ root_password_check.rc }}"
 
-    - name: Set MySQL root password if not set
-      community.mysql.mysql_user:
-        login_user: root
-        login_password: ''
-        user: root
-        host_all: yes
-        password: 'RoboShop@1'
-        state: present
-      when: root_password_check.rc != 0
+    # - name: Set MySQL root password if not set
+    #   community.mysql.mysql_user:
+    #     login_user: root
+    #     login_password: ''
+    #     user: root
+    #     host_all: yes
+    #     password: 'RoboShop@1'
+    #     state: present
+    #   when: root_password_check.rc != 0
