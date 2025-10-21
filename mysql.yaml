@@ -3,29 +3,29 @@
   become: yes
   tasks:
 
-    - name: Check if MySQL root password is set
-      ansible.builtin.shell: |
-        mysql -u root -p'RoboShop@1' -e "SELECT 1;" >/dev/null 2>&1
-      register: root_password_check
-      ignore_errors: yes
-      changed_when: false
+    # - name: Check if MySQL root password is set
+    #   ansible.builtin.shell: |
+    #     mysql -u root -p'RoboShop@1' -e "SELECT 1;" >/dev/null 2>&1
+    #   register: root_password_check
+    #   ignore_errors: yes
+    #   changed_when: false
 
-    - name: Debug root password check
-      ansible.builtin.debug:
-        msg: "Root password check RC = {{ root_password_check.rc }}"
+    # - name: Debug root password check
+    #   ansible.builtin.debug:
+    #     msg: "Root password check RC = {{ root_password_check.rc }}"
 
-    - name: Setup root password if not set
-      ansible.builtin.shell: >
-        mysql_secure_installation --set-root-pass RoboShop@1
-      when: root_password_check.rc != 0
+    # - name: Setup root password if not set
+    #   ansible.builtin.shell: >
+    #     mysql_secure_installation --set-root-pass RoboShop@1
+    #   when: root_password_check.rc != 0
 
-    - name: Ensure root@localhost exists
-      ansible.builtin.shell: |
-        mysql -u root -p'RoboShop@1' -e "
-        CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY 'RoboShop@1';
-        GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
-        FLUSH PRIVILEGES;"
-      # always run after secure_installation
+    # - name: Ensure root@localhost exists
+    #   ansible.builtin.shell: |
+    #     mysql -u root -p'RoboShop@1' -e "
+    #     CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY 'RoboShop@1';
+    #     GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
+    #     FLUSH PRIVILEGES;"
+    #   # always run after secure_installation
 
 
     
