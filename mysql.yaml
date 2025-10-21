@@ -45,7 +45,7 @@
         host_all: yes
         password: 'RoboShop@1'
         state: present
-      when: root_password_check.rc != 0
+      when: root_pass_check.rc != 0
 
 
 
