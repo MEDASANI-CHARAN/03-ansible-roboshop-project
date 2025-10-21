@@ -14,23 +14,23 @@
         state: started
         enabled: yes
 
-    - name: Check if MySQL root uses mysql_native_password
+    - name: Check MySQL root plugin
       ansible.builtin.shell: |
         mysql -N -e "SELECT plugin FROM mysql.user WHERE user='root' AND host='localhost';"
       register: root_auth_plugin
       changed_when: false
       ignore_errors: yes
 
-    - name: Debug root password check
+    - name: Debug plugin type
       ansible.builtin.debug:
-        msg: "Root authentication plugin = {{ root_auth_plugin.rc }}"
+        msg: "Root plugin is {{ root_auth_plugin.stdout }}"
 
-    # - name: Set MySQL root password if not using mysql_native_password
-    #   community.mysql.mysql_user:
-    #     login_user: root
-    #     login_password: ''
-    #     user: root
-    #     host_all: yes
-    #     password: 'RoboShop@1'
-    #     state: present
-    #   when: "'mysql_native_password' not in root_auth_plugin.stdout"
+    - name: Set MySQL root password if plugin is not mysql_native_password
+      community.mysql.mysql_user:
+        login_user: root
+        login_password: ''
+        user: root
+        host_all: yes
+        password: 'RoboShop@1'
+        state: present
+      when: "'mysql_native_password' not in root_auth_plugin.stdout"
