@@ -20,7 +20,7 @@
         mysqladmin ping -u root -p'RoboShop@1' >/dev/null 2>&1
       register: root_pass_check
       ignore_errors: yes
-      changed_when: false
+      # changed_when: false
 
     - name: Debug root password check
       ansible.builtin.debug:
