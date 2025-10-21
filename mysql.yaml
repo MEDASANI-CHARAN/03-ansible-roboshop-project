@@ -14,18 +14,18 @@
         state: started
         enabled: yes
 
-    - name: Check MySQL root plugin
+    - name: Check if MySQL root password is set
       ansible.builtin.shell: |
-        mysql -N -e "SELECT plugin FROM mysql.user WHERE user='root' AND host='localhost';"
-      register: root_auth_plugin
-      changed_when: false
+        mysql -u root -p'RoboShop@1' -e "SELECT 1;" >/dev/null 2>&1
+      register: root_password_check
       ignore_errors: yes
+      changed_when: false
 
-    - name: Debug plugin type
+    - name: Debug root password check
       ansible.builtin.debug:
-        msg: "Root plugin is {{ root_auth_plugin.stdout }}"
+        msg: "Root password check RC = {{ root_password_check.rc }}"
 
-    - name: Set MySQL root password if plugin is not mysql_native_password
+    - name: Set MySQL root password if not set
       community.mysql.mysql_user:
         login_user: root
         login_password: ''
@@ -33,4 +33,4 @@
         host_all: yes
         password: 'RoboShop@1'
         state: present
-      when: "'mysql_native_password' not in root_auth_plugin.stdout"
+      when: root_password_check.rc != 0
