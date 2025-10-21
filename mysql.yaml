@@ -36,12 +36,12 @@
     #   when: root_pass_check.rc != 0
 
     - name: Create roboshop user for remote access
-  community.mysql.mysql_user:
-    login_user: root
-    login_password: 'RoboShop@1'
-    user: roboshop
-    host: '%'
-    password: 'Roboshop@123'
-    priv: '*.*:ALL'
-    state: present
+      community.mysql.mysql_user:
+        login_user: root
+        login_password: 'RoboShop@1'
+        user: roboshop
+        host: '%'
+        password: 'Roboshop@123'
+        priv: '*.*:ALL'
+        state: present
 
