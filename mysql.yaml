@@ -25,7 +25,6 @@
       ansible.builtin.debug:
         msg: "MySQL root password check RC = {{ root_pass_check.rc }}"
 
-
     - name: Set MySQL root password if not set
       community.mysql.mysql_user:
         login_user: root
@@ -34,4 +33,4 @@
         host_all: yes
         password: 'RoboShop@1'
         state: present
-      when: root_password_check.rc != 0
+      when: root_pass_check.rc != 0
