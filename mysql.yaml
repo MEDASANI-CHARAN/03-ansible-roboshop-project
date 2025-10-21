@@ -2,7 +2,6 @@
   hosts: mysql
   become: yes
   tasks:
-
     - name: Install MySQL server
       ansible.builtin.dnf:
         name: mysql-server
@@ -30,12 +29,18 @@
       ansible.builtin.debug:
         msg: "MySQL root password check RC = {{ root_pass_check.rc }}"
 
-    - name: Set MySQL root password if not set
-      community.mysql.mysql_user:
-        login_user: root
-        login_password: ''
-        user: root
-        host_all: yes
-        password: 'RoboShop@1'
-        state: present
+    - name: Setup MySQL root password if not set
+      ansible.builtin.shell: |
+        mysql_secure_installation --set-root-pass RoboShop@1
       when: root_pass_check.rc != 0
+      changed_when: true
+
+    # - name: Set MySQL root password if not set
+    #   community.mysql.mysql_user:
+    #     login_user: root
+    #     login_password: ''
+    #     user: root
+    #     host_all: yes
+    #     password: 'RoboShop@1'
+    #     state: present
+    #   when: root_pass_check.rc != 0
