@@ -23,7 +23,7 @@
 
     - name: Debug root password check
       ansible.builtin.debug:
-        msg: "Root authentication plugin = {{ root_auth_plugin.stdout }}"
+        msg: "Root authentication plugin = {{ root_auth_plugin.rc }}"
 
     # - name: Set MySQL root password if not using mysql_native_password
     #   community.mysql.mysql_user:
