@@ -14,10 +14,10 @@
         state: started
         enabled: yes
 
-    # - name: Install Python MySQL dependency (for Ansible to connect if needed later)
-    #   ansible.builtin.pip:
-    #     name: PyMySQL
-    #     executable: pip3
+    - name: Install Python MySQL dependency (for Ansible to connect if needed later)
+      ansible.builtin.pip:
+        name: PyMySQL
+        executable: pip3
 
     - name: Check if MySQL root password is already set
       ansible.builtin.shell: |
