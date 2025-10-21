@@ -26,9 +26,9 @@
       ignore_errors: yes
       changed_when: false
 
-    # - name: Debug root password check
-    #   ansible.builtin.debug:
-    #     msg: "Root password check RC = {{ root_password_check.rc }}"
+    - name: Debug root password check
+      ansible.builtin.debug:
+        msg: "Root password check RC = {{ root_password_check.rc }}"
 
     # - name: Set MySQL root password if not set
     #   community.mysql.mysql_user:
