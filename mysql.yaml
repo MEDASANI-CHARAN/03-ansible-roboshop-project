@@ -13,10 +13,10 @@
         state: started
         enabled: yes
     
-    - name: Install PyMySQL for Python3
-      ansible.builtin.dnf:
-        name: python3-PyMySQL
-        state: present
+    - name: Install PyMySQL for Python3 
+      ansible.builtin.pip:
+        name: PyMySQL
+        executable: pip3.9
 
     - name: Check if MySQL root password works
       ansible.builtin.shell: |

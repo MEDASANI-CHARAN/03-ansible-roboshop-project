@@ -4,7 +4,7 @@
   tasks:
   - name: install maven
     ansible.builtin.dnf:
-      name: maven 
+      name: maven
       state: installed
   
   - name: create roboshop system user
@@ -80,16 +80,44 @@
   #     mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < /app/db/master-data.sql
   #   when: mysql_db_check.rc != 0
 
-  - name: Load schema, app-user, and master-data SQL scripts if DB not exists
-    ansible.builtin.shell: |
-      mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < {{ item }}
-    loop:
-      - /app/db/schema.sql
-      - /app/db/app-user.sql
-      - /app/db/master-data.sql
-    when: mysql_db_check.rc != 0
+  # - name: Load schema, app-user, and master-data SQL scripts if DB not exists
+  #   ansible.builtin.shell: |
+  #     mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < {{ item }}
+  #   loop:
+  #     - /app/db/schema.sql
+  #     - /app/db/app-user.sql
+  #     - /app/db/master-data.sql
+  #   when: mysql_db_check.rc != 0
   
-  - name: restart shipping Service
-    ansible.builtin.service:
-      name: shipping
-      state: restarted
+  - name: Install PyMySQL for Python3
+    ansible.builtin.pip:
+      name: PyMySQL
+      executable: pip3.9
+  
+  - name: connect to mysql using app user
+    community.mysql.mysql_info:
+      login_user: shipping
+      login_password: RoboShop@1
+      login_host: mysql.daws84s.site
+      login_db: cities
+  
+  # - name: import data
+  #   tags:
+  #   - import
+  #   community.mysql.mysql_db:
+  #     name: all
+  #     login_user: root
+  #     login_password: RoboShop@1
+  #     login_host: mysql.daws2025.online
+  #     state: import
+  #     target: "{{ item }}"
+  #   loop:
+  #   - /app/db/schema.sql
+  #   - /app/db/app-user.sql
+  #   - /app/db/master-data.sql
+
+  
+  # - name: restart shipping Service
+  #   ansible.builtin.service:
+  #     name: shipping
+  #     state: restarted
