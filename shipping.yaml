@@ -8,7 +8,6 @@
       state: installed
     loop:
     - maven
-    - cryptography
     - mysql
   
   - name: create roboshop system user
@@ -95,8 +94,12 @@
   
   - name: Install PyMySQL for Python3
     ansible.builtin.pip:
-      name: PyMySQL
+      name: "{{item}}"
       executable: pip3.9
+    loop:
+    - PyMySQL
+    - cryptography
+
   
   - name: connect to mysql using app user
     community.mysql.mysql_info:
