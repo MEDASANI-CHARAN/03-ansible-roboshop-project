@@ -2,7 +2,7 @@
   hosts: shipping
   become: yes
   tasks:
-  - name: install maven
+  - name: install maven and mysql
     ansible.builtin.dnf:
       name: "{{item}}"
       state: installed
@@ -92,7 +92,7 @@
   #     - /app/db/master-data.sql
   #   when: mysql_db_check.rc != 0
   
-  - name: Install PyMySQL for Python3
+  - name: Install PyMySQL and cryptography for Python3
     ansible.builtin.pip:
       name: "{{item}}"
       executable: pip3.9
