@@ -57,10 +57,10 @@
       state: started
       enabled: yes
   
-  # - name: install MySQL client
-  #   ansible.builtin.dnf:
-  #     name: mysql-server
-  #     state: present
+  - name: install MySQL client
+    ansible.builtin.dnf:
+      name: mysql-server
+      state: present
 
   # - name: Check if catalogue database exists
   #   ansible.builtin.shell: |
