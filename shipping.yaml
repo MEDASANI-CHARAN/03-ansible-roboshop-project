@@ -99,32 +99,31 @@
     loop:
     - PyMySQL
     - cryptography
-
   
-  - name: connect to mysql using app user
-    community.mysql.mysql_info:
-      login_user: shipping
-      login_password: RoboShop@1
-      login_host: mysql.daws2025.online
-      login_db: cities
-  
-  # - name: import data
-  #   tags:
-  #   - import
-  #   community.mysql.mysql_db:
-  #     name: all
-  #     login_user: root
+  # - name: connect to mysql using app user
+  #   community.mysql.mysql_info:
+  #     login_user: shipping
   #     login_password: RoboShop@1
   #     login_host: mysql.daws2025.online
-  #     state: import
-  #     target: "{{ item }}"
-  #   loop:
-  #   - /app/db/schema.sql
-  #   - /app/db/app-user.sql
-  #   - /app/db/master-data.sql
+  #     login_db: cities
+  
+  - name: import data
+    tags:
+    - import
+    community.mysql.mysql_db:
+      name: all
+      login_user: root
+      login_password: RoboShop@1
+      login_host: mysql.daws2025.online
+      state: import
+      target: "{{ item }}"
+    loop:
+    - /app/db/schema.sql
+    - /app/db/app-user.sql
+    - /app/db/master-data.sql
 
   
-  # - name: restart shipping Service
-  #   ansible.builtin.service:
-  #     name: shipping
-  #     state: restarted
+  - name: restart shipping Service
+    ansible.builtin.service:
+      name: shipping
+      state: restarted
