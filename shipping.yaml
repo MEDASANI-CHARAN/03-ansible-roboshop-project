@@ -4,8 +4,12 @@
   tasks:
   - name: install maven
     ansible.builtin.dnf:
-      name: maven
+      name: "{item}"
       state: installed
+    loop:
+    - maven
+    - cryptography
+    - mysql
   
   - name: create roboshop system user
     ansible.builtin.user:
@@ -57,10 +61,10 @@
       state: started
       enabled: yes
   
-  - name: install MySQL client
-    ansible.builtin.dnf:
-      name: mysql-server
-      state: present
+  # - name: install MySQL client ## mentioned in loop
+  #   ansible.builtin.dnf:
+  #     name: mysql-server
+  #     state: present
 
   - name: Check if catalogue database exists
     ansible.builtin.shell: |
@@ -98,7 +102,7 @@
     community.mysql.mysql_info:
       login_user: shipping
       login_password: RoboShop@1
-      login_host: mysql.daws84s.site
+      login_host: mysql.daws2025.online
       login_db: cities
   
   # - name: import data
