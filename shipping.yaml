@@ -2,14 +2,14 @@
   hosts: shipping
   become: yes
   tasks:
-  - name: install maven
+  - name: install required packages
     ansible.builtin.dnf:
-      name: "{item}"
-      state: installed
+      name: "{{ item }}"
+      state: present
     loop:
-    - maven
-    - cryptography
-    - mysql
+      - maven
+      - cryptography
+      - mysql
   
   - name: create roboshop system user
     ansible.builtin.user:
