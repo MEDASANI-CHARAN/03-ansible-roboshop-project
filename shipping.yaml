@@ -65,65 +65,65 @@
       name: mysql-server
       state: present
 
-  # - name: Check if catalogue database exists
+  - name: Check if catalogue database exists
+    ansible.builtin.shell: |
+      mysql -h mysql.daws2025.online -uroot -pRoboShop@1 -e "USE cities;" 
+    register: mysql_db_check
+    ignore_errors: yes
+    changed_when: false
+
+  - name: Show database check result
+    ansible.builtin.debug:
+      msg: "Database check result: {{ mysql_db_check.rc }} (0 means DB exists, non-zero means not exists)"
+
+  # - name: Load schema, app-user, and master-data SQL scripts if DB not exists
   #   ansible.builtin.shell: |
-  #     mysql -h mysql.daws2025.online -uroot -pRoboShop@1 -e "USE cities;" 
-  #   register: mysql_db_check
-  #   ignore_errors: yes
-  #   changed_when: false
-
-  # - name: Show database check result
-  #   ansible.builtin.debug:
-  #     msg: "Database check result: {{ mysql_db_check.rc }} (0 means DB exists, non-zero means not exists)"
-
-  # # - name: Load schema, app-user, and master-data SQL scripts if DB not exists
-  # #   ansible.builtin.shell: |
-  # #     mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < /app/db/schema.sql
-  # #     mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < /app/db/app-user.sql
-  # #     mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < /app/db/master-data.sql
-  # #   when: mysql_db_check.rc != 0
-
-  # # - name: Load schema, app-user, and master-data SQL scripts if DB not exists
-  # #   ansible.builtin.shell: |
-  # #     mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < {{ item }}
-  # #   loop:
-  # #     - /app/db/schema.sql
-  # #     - /app/db/app-user.sql
-  # #     - /app/db/master-data.sql
-  # #   when: mysql_db_check.rc != 0
-  
-  # - name: Install PyMySQL and cryptography for Python3
-  #   ansible.builtin.pip:
-  #     name: "{{item}}"
-  #     executable: pip3.9
-  #   loop:
-  #   - PyMySQL
-  #   - cryptography
-  
-  # # - name: connect to mysql using app user
-  # #   community.mysql.mysql_info:
-  # #     login_user: shipping
-  # #     login_password: RoboShop@1
-  # #     login_host: mysql.daws2025.online
-  # #     login_db: cities
-  
-  # - name: import data
-  #   tags: ## If you want to run particular task then use tags
-  #   - import
-  #   community.mysql.mysql_db:
-  #     name: all
-  #     login_user: root
-  #     login_password: RoboShop@1
-  #     login_host: mysql.daws2025.online
-  #     state: import
-  #     target: "{{ item }}"
-  #   loop:
-  #   - /app/db/schema.sql
-  #   - /app/db/app-user.sql
-  #   - /app/db/master-data.sql
+  #     mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < /app/db/schema.sql
+  #     mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < /app/db/app-user.sql
+  #     mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < /app/db/master-data.sql
   #   when: mysql_db_check.rc != 0
 
-  # - name: restart shipping Service
-  #   ansible.builtin.service:
-  #     name: shipping
-  #     state: restarted
+  # - name: Load schema, app-user, and master-data SQL scripts if DB not exists
+  #   ansible.builtin.shell: |
+  #     mysql -h mysql.daws2025.online -uroot -pRoboShop@1 < {{ item }}
+  #   loop:
+  #     - /app/db/schema.sql
+  #     - /app/db/app-user.sql
+  #     - /app/db/master-data.sql
+  #   when: mysql_db_check.rc != 0
+  
+  - name: Install PyMySQL and cryptography for Python3
+    ansible.builtin.pip:
+      name: "{{item}}"
+      executable: pip3.9
+    loop:
+    - PyMySQL
+    - cryptography
+  
+  # - name: connect to mysql using app user
+  #   community.mysql.mysql_info:
+  #     login_user: shipping
+  #     login_password: RoboShop@1
+  #     login_host: mysql.daws2025.online
+  #     login_db: cities
+  
+  - name: import data
+    tags: ## If you want to run particular task then use tags
+    - import
+    community.mysql.mysql_db:
+      name: all
+      login_user: root
+      login_password: RoboShop@1
+      login_host: mysql.daws2025.online
+      state: import
+      target: "{{ item }}"
+    loop:
+    - /app/db/schema.sql
+    - /app/db/app-user.sql
+    - /app/db/master-data.sql
+    when: mysql_db_check.rc != 0
+
+  - name: restart shipping Service
+    ansible.builtin.service:
+      name: shipping
+      state: restarted
