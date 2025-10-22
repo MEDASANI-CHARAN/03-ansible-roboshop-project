@@ -67,7 +67,7 @@
 
   - name: Check if catalogue database exists
     ansible.builtin.shell: |
-      mysql -h mysql.daws2025.online -uroot -pRoboShop@1 -e "USE cities;" 
+      mysql -uroot -pRoboShop@1 -e "USE cities;" 
     register: mysql_db_check
     ignore_errors: yes
     changed_when: false
@@ -108,7 +108,7 @@
   #     login_db: cities
   
   - name: import data
-    tags:
+    tags: ## If you want to run particular task then use tags
     - import
     community.mysql.mysql_db:
       name: all
