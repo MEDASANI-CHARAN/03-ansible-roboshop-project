@@ -64,7 +64,7 @@
 
   - name: Check if catalogue database exists
     ansible.builtin.shell: |
-      mysql -h mysql.daws2025.online -uroot -pRoboShop@1 -e "USE catalogue;" 
+      mysql -h mysql.daws2025.online -uroot -pRoboShop@1 -e "USE cities;" 
     register: mysql_db_check
     ignore_errors: yes
     changed_when: false
