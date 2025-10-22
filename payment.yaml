@@ -36,9 +36,11 @@
       dest: /app
       remote_src: yes
 
-  - name: install maven dependencies
-    ansible.builtin.command: mvn clean package
-    args:
+  - name: install python dependencies
+    ansible.builtin.pip:
+      requirements: requirements.txt
+      executable: pip3.9
+    args: ## this should be run on app dir and come out
       chdir: /app
 
   - name: copy payment service to system directory
