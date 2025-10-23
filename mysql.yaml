@@ -52,6 +52,6 @@
         user: shipping
         host: '172.31.23.118'
         password: 'RoboShop@1'
-        priv: 'cities.*:ALL'
+        priv: 'cities.*:ALL,*.*:CREATE USER'
         state: present
 
