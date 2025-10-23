@@ -10,7 +10,7 @@
     - python3
     - gcc
     - python3-devel
-  
+
   - name: create app directory
     ansible.builtin.file:
       path: /app
