@@ -20,7 +20,7 @@
 
     - name: Check if MySQL root password works
       ansible.builtin.shell: |
-        mysql -u root -p'RoboShop@1' -e "SELECT 1;" >/dev/null 2>&1
+        mysql -h mysql.daws2025.online -u root -p'RoboShop@1' -e "SELECT 1;" >/dev/null 2>&1
       register: root_pass_check
       ignore_errors: yes
       changed_when: false
