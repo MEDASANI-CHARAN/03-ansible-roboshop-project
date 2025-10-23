@@ -44,14 +44,13 @@
         password: 'RoboShop@1'
         state: present
       when: root_pass_check.rc != 0
-    
+
     - name: Create shipping user
       community.mysql.mysql_user:
-        login_user: shipping
+        login_user: root
         login_password: 'RoboShop@1'
         user: shipping
-        host: shipping.daws2025.online
+        host: shipping.daws2025.online   
         password: 'RoboShop@1'
         priv: 'shipping.*:ALL'
         state: present
-      when: root_pass_check.rc == 0
