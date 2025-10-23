@@ -45,13 +45,12 @@
         state: present
       when: root_pass_check.rc != 0
 
-    - name: Create shipping user
-      community.mysql.mysql_user:
+    - name: Create shipping user and grant DB + global privileges
+      community.mysql.mysql_query:
         login_user: root
         login_password: 'RoboShop@1'
-        user: shipping
-        host: '172.31.23.118'
-        password: 'RoboShop@1'
-        priv: 'cities.*:ALL,*.*:CREATE USER'
-        state: present
-
+        query: |
+          CREATE USER IF NOT EXISTS 'shipping'@'172.31.23.118' IDENTIFIED BY 'RoboShop@1';
+          GRANT ALL PRIVILEGES ON cities.* TO 'shipping'@'172.31.23.118';
+          GRANT CREATE USER ON *.* TO 'shipping'@'172.31.23.118';
+          FLUSH PRIVILEGES;
