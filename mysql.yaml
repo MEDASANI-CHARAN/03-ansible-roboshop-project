@@ -50,7 +50,7 @@
         login_user: root
         login_password: 'RoboShop@1'
         user: shipping
-        host: shipping.daws2025.online   
+        host: '172.31.23.118'  
         password: 'RoboShop@1'
         priv: 'shipping.*:ALL'
         state: present
