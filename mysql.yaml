@@ -47,7 +47,7 @@
     
     - name: Create shipping user
       community.mysql.mysql_user:
-        login_user: root
+        login_user: shipping
         login_password: 'RoboShop@1'
         user: shipping
         host: shipping.daws2025.online
